@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ParkingService {
-    private Set<String> parkedCars;
+    private final Set<String> parkedCars;
 
     public ParkingService() {
         this.parkedCars = new HashSet<>();
@@ -15,16 +15,23 @@ public class ParkingService {
     }
 
     public void park(String licensePlate) {
-        if (licensePlate == null || licensePlate.trim().isEmpty()) {
+        if (isValidLicensePlate(licensePlate)) {
             return;
         }
-        parkedCars.add(licensePlate.toUpperCase());
+        parkedCars.add(licensePlate.replace("-", "").toUpperCase());
     }
 
     public void unpark(String licensePlate) {
-        if (licensePlate == null || licensePlate.trim().isEmpty()) {
+        if (isValidLicensePlate(licensePlate)) {
             return;
         }
-        parkedCars.remove(licensePlate.toUpperCase());
+        parkedCars.remove(licensePlate.replace("-", "").toUpperCase());
     }
+
+    private boolean isValidLicensePlate(String licensePlate) {
+        return licensePlate == null || licensePlate.trim().isEmpty() ||
+                !licensePlate.matches("^[A-Z]{3}-?\\d{4}$") ||
+                licensePlate.contains("--");
+    }
+
 }
